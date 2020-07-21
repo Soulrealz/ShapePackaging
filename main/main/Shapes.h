@@ -5,6 +5,7 @@
 #define PI 3.1415926
 //1main shape - rectangle
 //4sub shapes - ellipse, circle, hexagon, triangle
+
 class Shape
 {
 public:
@@ -32,7 +33,8 @@ protected:
 		return side;
 	}
 };
-int Shape::treeCount = 0;
+//setting to -1 because creating a rectangle would also increase this counter
+int Shape::treeCount = -1;
 
 class Rectangle : public Shape
 {
@@ -43,10 +45,10 @@ public:
 	{
 		return side * height;
 	}
-
 	void setCenter(double x, double y) override
 	{
-
+		center.x = x;
+		center.y = y;
 	}
 
 	unsigned getLength() const
@@ -122,6 +124,10 @@ public:
 	double getArea() const override
 	{
 		return PI * side * smallRadius;
+	}
+	void setCenter(double x, double y) override
+	{
+
 	}
 private:
 	unsigned smallRadius;

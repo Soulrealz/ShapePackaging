@@ -13,7 +13,7 @@ void packTriangles(Rectangle garden);
 void packHexagons(Rectangle garden);
 
 void rotate(std::vector<std::unique_ptr<Shape>>& trees, double angle);
-void print(std::vector<std::unique_ptr<Shape>>& trees);
+void print(std::vector<std::unique_ptr<Shape>>& trees, double gardenArea);
 
 int main()
 {
@@ -47,7 +47,7 @@ int main()
 	}	
 
 	rotate(trees, angle);
-	print(trees);
+	print(trees, garden.getArea());
 }
 
 void init(unsigned& len, unsigned& hei, double& angle)
@@ -85,7 +85,7 @@ void rotate(Coordinates rect[4], double angle)
 	std::cout << "Rotating garden by: " << angle << " degrees.\nCurrent coordinates:\n";
 	for (int i = 0; i < 4; i++)
 	{
-		std::cout << "(" << rect[i].x << "," << rect[i].y << ")   ";
+		std::cout << "(" << rect[i].x << "," << rect[i].y << ")" << std::right << std::setw(5);
 	}
 	//first point coord (0,0) => doesnt move after rotation
 	//rotate counter clockwise
@@ -118,7 +118,7 @@ void rotate(Coordinates rect[4], double angle)
 	std::cout << "\nNew coordinates:\n";
 	for (int i = 0; i < 4; i++)
 	{
-		std::cout << std::setprecision(2) << "(" << rect[i].x << "," << rect[i].y << ")  ";
+		std::cout << std::setprecision(2) << "(" << rect[i].x << "," << rect[i].y << ")" << std::right << std::setw(5);
 	}
 }
 
@@ -141,6 +141,7 @@ void packCircles(Rectangle garden, std::vector<std::unique_ptr<Shape>>& trees)
 		x += (radius * 2);
 	}
 }
+
 void packEllipses(Rectangle garden)
 {
 
@@ -149,6 +150,7 @@ void packTriangles(Rectangle garden)
 {
 
 }
+
 
 void rotate(std::vector<std::unique_ptr<Shape>>& trees, double angle)
 {
@@ -178,17 +180,21 @@ void rotate(std::vector<std::unique_ptr<Shape>>& trees, double angle)
 		}
 	}
 }
-
-void print(std::vector<std::unique_ptr<Shape>>& trees)
+void print(std::vector<std::unique_ptr<Shape>>& trees, double gardenArea)
 {
-	std::cout << "Number of trees produced: " << Shape::getTreeCount() << std::endl;
+	std::cout << "Number of trees planted: " << Shape::getTreeCount() << std::endl;
 	std::cout << "Coordinates of their centers:\n";
 	Coordinates printer(INT_MIN, INT_MIN);
+	double totalTreeArea = 0;
 	for (auto& a : trees)
 	{
 		printer = a->getCenterCoordinates();
 		std::cout << "(" << printer.x << "," << printer.y << ")\n";
+		totalTreeArea += a->getArea();
 	}
+	// x = (totalTreeArea / gardenArea) * 100
+	totalTreeArea /= gardenArea;
+	std::cout << "The trees take up " << totalTreeArea * 100 << "% of the garden\n";
 }
 
 /*
