@@ -6,13 +6,13 @@
 void init(unsigned& len, unsigned& hei, double& angle);
 int treeType();
 void rotate(Coordinates rect[4], double angle);
+void rotate(std::vector<std::unique_ptr<Shape>>& trees, double angle);
 
 void packCircles(Rectangle garden, std::vector<std::unique_ptr<Shape>>& trees);
 void packEllipses(Rectangle garden);
 void packTriangles(Rectangle garden);
 void packHexagons(Rectangle garden);
 
-void rotate(std::vector<std::unique_ptr<Shape>>& trees, double angle);
 void print(std::vector<std::unique_ptr<Shape>>& trees, double gardenArea);
 
 int main()
