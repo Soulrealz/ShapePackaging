@@ -69,7 +69,7 @@ void init(unsigned& len, unsigned& hei, double& angle)
 	{
 		angle -= 360;
 	}
-	while (angle <= -360)
+	while (angle < 0)
 	{
 		angle += 360;
 	}
@@ -94,32 +94,16 @@ void rotate(Coordinates rect[4], double angle)
 	{
 		std::cout << "(" << rect[i].x << "," << rect[i].y << ")" << std::right << std::setw(5);
 	}
+
 	//first point coord (0,0) => doesnt move after rotation
-	//rotate counter clockwise
-	if (angle > 0)
+	for (int i = 1; i < 4; i++)
 	{
-		for (int i = 1; i < 4; i++)
-		{
-			double xPrime = rect[i].x;
-			double yPrime = rect[i].y;
+		double xPrime = rect[i].x;
+		double yPrime = rect[i].y;
 
-			rect[i].x = xPrime * cos(angle * PI / 180) - yPrime * sin(angle * PI / 180);
-			rect[i].y = xPrime * sin(angle * PI / 180) + yPrime * cos(angle * PI / 180);
-		}
+		rect[i].x = xPrime * cos(angle * PI / 180) - yPrime * sin(angle * PI / 180);
+		rect[i].y = xPrime * sin(angle * PI / 180) + yPrime * cos(angle * PI / 180);
 	}
-	else
-	{
-		angle = 360 + angle;
-		for (int i = 1; i < 4; i++)
-		{
-			double xPrime = rect[i].x;
-			double yPrime = rect[i].y;
-
-			rect[i].x = xPrime * cos(angle * PI / 180) - yPrime * sin(angle * PI / 180);
-			rect[i].y = xPrime * sin(angle * PI / 180) + yPrime * cos(angle * PI / 180);
-		}
-	}
-
 
 	std::cout << "\nNew coordinates:\n";
 	for (int i = 0; i < 4; i++)
@@ -129,30 +113,14 @@ void rotate(Coordinates rect[4], double angle)
 }
 void rotate(std::vector<std::unique_ptr<Shape>>& trees, double angle)
 {
-	if (angle > 0)
+	int size = trees.size();
+	for (int i = 0; i < size; i++)
 	{
-		int size = trees.size();
-		for (int i = 0; i < size; i++)
-		{
-			Coordinates centerPrime = trees[i]->getCenterCoordinates();
-			double newXcoord = centerPrime.x * cos(angle * PI / 180) - centerPrime.y * sin(angle * PI / 180);
-			double newYcoord = centerPrime.x * sin(angle * PI / 180) + centerPrime.y * cos(angle * PI / 180);
+		Coordinates centerPrime = trees[i]->getCenterCoordinates();
+		double newXcoord = centerPrime.x * cos(angle * PI / 180) - centerPrime.y * sin(angle * PI / 180);
+		double newYcoord = centerPrime.x * sin(angle * PI / 180) + centerPrime.y * cos(angle * PI / 180);
 
-			trees[i]->setCenter(newXcoord, newYcoord);
-		}
-	}
-	else
-	{
-		angle = 360 + angle;
-		int size = trees.size();
-		for (int i = 0; i < size; i++)
-		{
-			Coordinates centerPrime = trees[i]->getCenterCoordinates();
-			double newXcoord = centerPrime.x * cos(angle * PI / 180) - centerPrime.y * sin(angle * PI / 180);
-			double newYcoord = centerPrime.x * sin(angle * PI / 180) + centerPrime.y * cos(angle * PI / 180);
-
-			trees[i]->setCenter(newXcoord, newYcoord);
-		}
+		trees[i]->setCenter(newXcoord, newYcoord);
 	}
 }
 

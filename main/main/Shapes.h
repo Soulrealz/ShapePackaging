@@ -32,11 +32,6 @@ protected:
 	unsigned side;
 	Coordinates center;
 	static int treeCount;
-
-	unsigned getSide() const
-	{
-		return side;
-	}
 };
 //setting to -1 because creating the initial rectangle will also increase this counter
 int Shape::treeCount = -1;
@@ -53,7 +48,7 @@ public:
 
 	unsigned getLength() const
 	{
-		return getSide();
+		return side;
 	}
 	unsigned getHeight() const
 	{
