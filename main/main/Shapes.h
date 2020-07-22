@@ -13,12 +13,17 @@ public:
 	virtual ~Shape() {}
 
 	virtual double getArea() const = 0;
-	virtual void setCenter(double x, double y) = 0;
 
+	void setCenter(double x, double y)
+	{
+		center.x = x;
+		center.y = y;	
+	}
 	Coordinates getCenterCoordinates() const
 	{
 		return center;
 	}
+
 	static int getTreeCount()
 	{
 		return treeCount;
@@ -33,7 +38,7 @@ protected:
 		return side;
 	}
 };
-//setting to -1 because creating a rectangle would also increase this counter
+//setting to -1 because creating the initial rectangle will also increase this counter
 int Shape::treeCount = -1;
 
 class Rectangle : public Shape
@@ -44,11 +49,6 @@ public:
 	double getArea() const override
 	{
 		return side * height;
-	}
-	void setCenter(double x, double y) override
-	{
-		center.x = x;
-		center.y = y;
 	}
 
 	unsigned getLength() const
@@ -66,7 +66,6 @@ private:
 class Triangle : public Shape
 {
 public:
-	//C = [(x1 + x2 + x3)/ 3, (y1 + y2 + y3)/ 3)
 	Triangle(unsigned _side, double x, double y) : Shape(_side, x, y) {}
 
 	double getArea() const override
@@ -75,17 +74,13 @@ public:
 		//using Heron
 		return sqrt(p*((p - side) * 3));
 	}
-	void setCenter(double x, double y) override
-	{
-
-	}
 private:
 };
 
 class Hexagon : public Shape
 {
 public:
-	Hexagon(unsigned _side) : Shape(_side, 1, 1) {}
+	Hexagon(unsigned _side, double x, double y) : Shape(_side, x, y) {}
 
 	double getArea() const override
 	{
@@ -103,15 +98,10 @@ public:
 	{
 		return PI * pow(side, 2);
 	}
-	void setCenter(double x, double y) override
-	{
-		center.x = x;
-		center.y = y;
-	}
 
 	unsigned getRadius() const
 	{
-		return getSide();
+		return side;
 	}
 private:
 };
@@ -119,16 +109,12 @@ private:
 class Ellipse : public Shape
 {
 public:
-	Ellipse(unsigned bigRadius, unsigned _smallRadius) : Shape(bigRadius, 1, 1), smallRadius(_smallRadius) {}
+	Ellipse(unsigned xRad, unsigned _yRad, double x, double y) : Shape(xRad, x, y), yRad(_yRad) {}
 
 	double getArea() const override
 	{
-		return PI * side * smallRadius;
-	}
-	void setCenter(double x, double y) override
-	{
-
+		return PI * side * yRad;
 	}
 private:
-	unsigned smallRadius;
+	unsigned yRad;
 };
