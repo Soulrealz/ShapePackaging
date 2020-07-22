@@ -72,7 +72,7 @@ public:
 	{
 		double p = (side * 3.0) / 2.0;
 		//using Heron
-		return sqrt(p*((p - side) * 3));
+		return sqrt(p*((p - side)*(p - side)*(p-side)));
 	}
 private:
 };

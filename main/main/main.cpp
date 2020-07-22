@@ -22,7 +22,7 @@ int main()
 	double angle = 0;
 	init(length, height, angle);
 
-	std::cout << "Creating garden...\n";
+	std::cout << "\nCreating garden...";
 	Rectangle garden(length, height);
 	//left bottom, right bottom, right upper, left upper
 	Coordinates rectCoord[4] = { Coordinates(0, 0), Coordinates(length, 0), Coordinates(length, height), Coordinates(0, height) };
@@ -89,7 +89,7 @@ Select the shape of the trees.
 }
 void rotate(Coordinates rect[4], double angle)
 {
-	std::cout << "Rotating garden by: " << angle << " degrees.\nCurrent coordinates:\n";
+	std::cout << "\nRotating garden by: " << angle << " degrees.\nCurrent coordinates:\n";
 	for (int i = 0; i < 4; i++)
 	{
 		std::cout << "(" << rect[i].x << "," << rect[i].y << ")" << std::right << std::setw(5);
@@ -159,15 +159,15 @@ void rotate(std::vector<std::unique_ptr<Shape>>& trees, double angle)
 void packCircles(Rectangle garden, std::vector<std::unique_ptr<Shape>>& trees)
 {
 	unsigned radius = 0;
-	std::cout << "Select radius:\n";
+	std::cout << "Input radius:\n";
 	std::cin >> radius;
-	int xAxis = garden.getLength();
-	int yAxis = garden.getHeight();
+	unsigned xAxis = garden.getLength();
+	unsigned yAxis = garden.getHeight();
 
 	unsigned diameter = radius * 2;
-	for (int x = 0; x + diameter <= xAxis; x += diameter)
+	for (unsigned x = 0; x + diameter <= xAxis; x += diameter)
 	{
-		for (int y = 0; y + diameter <= yAxis; y += diameter)
+		for (unsigned y = 0; y + diameter <= yAxis; y += diameter)
 		{
 			trees.push_back(std::make_unique<Circle>(radius, radius + x, radius + y));
 		}
@@ -183,8 +183,8 @@ void packEllipses(Rectangle garden, std::vector<std::unique_ptr<Shape>>& trees)
 	std::cout << "Y Radius:\n";
 	std::cin >> yRad;
 
-	int xAxis = garden.getLength();
-	int yAxis = garden.getHeight();
+	unsigned xAxis = garden.getLength();
+	unsigned yAxis = garden.getHeight();
 
 	//making the bigger radius of the ellipse be parallel to the longer axis
 	if (xAxis > yAxis && xRad < yRad)
@@ -198,29 +198,55 @@ void packEllipses(Rectangle garden, std::vector<std::unique_ptr<Shape>>& trees)
 	unsigned width = xRad * 2;
 	unsigned height = yRad * 2;
 
-	for (int x = 0; x + width <= xAxis; x += width)
+	for (unsigned x = 0; x + width <= xAxis; x += width)
 	{
-		for (int y = 0; y + height <= yAxis; y += height)
+		for (unsigned y = 0; y + height <= yAxis; y += height)
 		{
 			trees.push_back(std::make_unique<Ellipse>(xRad, yRad, xRad + x, yRad + y));
 		}
 	}
 }
 void packTriangles(Rectangle garden, std::vector<std::unique_ptr<Shape>>& trees)
-{
-	//center = [(x1 + x2 + x3)/ 3, (y1 + y2 + y3)/ 3)
-	unsigned radius = 0;
-	std::cout << "Select radius:\n";
-	std::cin >> radius;
-	int xAxis = garden.getLength();
-	int yAxis = garden.getHeight();
+{	
+	unsigned side = 0;
+	std::cout << "Side Length:\n";
+	std::cin >> side;
+	unsigned xAxis = garden.getLength();
+	unsigned yAxis = garden.getHeight();
 
-	unsigned diameter = radius * 2;
-	for (int x = 0; x + diameter <= xAxis; x += diameter)
+	double height = (sqrt(3.0)*side) / 2.0;
+	//packing triangles up-down facing
+	//up facing triangles
+	//center = [(x1 + x2 + x3)/ 3, (y1 + y2 + y3)/ 3)]
+	for (double x = 0; x + side <= xAxis; x += side)
 	{
-		for (int y = 0; y + diameter <= yAxis; y += diameter)
+		for (double y = 0; y + height <= yAxis; y += height)
+		{	
+			//1st coord = leftPoint
+			//2nd coord = rightPoint
+			//3rd coord = topPoint
+			double x1 = x;
+			double x2 = x + side;
+			double x3 = x + side / 2.0;
+			double y1 = y;
+			double y2 = y;
+			double y3 = y + height;
+			trees.push_back(std::make_unique<Triangle>(side, (x1 + x2 + x3) / 3.0, (y1 + y2 + y3) / 3.0));
+		}
+	}
+
+	//down facing triangles
+	for (double x = side / 2.0; x + side <= xAxis; x += side)
+	{
+		for (double y = 0; y + height <= yAxis; y += height)
 		{
-			trees.push_back(std::make_unique<Circle>(radius, radius + x, radius + y));
+			double x1 = x;
+			double x2 = x + side;
+			double x3 = x + side / 2.0;
+			double y1 = y + height;
+			double y2 = y + height;
+			double y3 = y;
+			trees.push_back(std::make_unique<Triangle>(side, (x1 + x2 + x3) / 3.0, (y1 + y2 + y3) / 3.0));
 		}
 	}
 }
@@ -249,7 +275,7 @@ void packHexagons(Rectangle garden, std::vector<std::unique_ptr<Shape>>& trees)
 
 void print(std::vector<std::unique_ptr<Shape>>& trees, double gardenArea)
 {
-	std::cout << "\nNumber of trees planted: " << Shape::getTreeCount() << std::endl;
+	std::cout << "\n\nNumber of trees planted: " << Shape::getTreeCount() << std::endl;
 	std::cout << "Coordinates of their centers:\n";
 
 	Coordinates printer(INT_MIN, INT_MIN);
